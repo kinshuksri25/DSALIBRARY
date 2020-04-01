@@ -1,0 +1,14 @@
+{
+  "name": "dslib",
+  "version": "1.0.0",
+  "description": "data structure library",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "DS"
+  ],
+  "author": "kinshuk srivastava",
+  "license": "ISC"
+}
