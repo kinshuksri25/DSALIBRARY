@@ -12,72 +12,118 @@ class DoublyLinkedList {
         this.size = 0;
     }
 
-    //Adds a new node in the linkedList instance
+    //Calls the appropriate method that will add a new node in the linkedList instance
     //params --> data (any), postion (number)
-    addNode(data, position = this.size) {
+    //returns --> head(Node)
+    addNode(data, position=this.sizeOf()+1) {
         let node = new Node(data);
-        let currentNode;
-        position = typeof (position) == "number" && positon <= this.size ? postion : this.size;
+        //TODO --> error handling for invalid position
+        if(!this.head){
+            this.head = node;
+            this.head.nextNode = this.head;
+            position != 1 && console.log("Head is undefined, recieved invalid position. Adding node as head");
+        }else{
+            //TODO --> error handling for invalid position
+            if(typeof(position) != "number" || (position > this.sizeOf()+1 || position < 1)){
+                position = this.sizeOf()+1;
+                console.log("received invalid position. Adding node to tail");
+            }   
+            
+            position == 1 && this.addNodeHead(node);
+            position == this.sizeOf()+1 && this.addNodeTail(node);
+            position > 1 && position < this.sizeOf()+1 && this.addNodePosition(node,position);
 
-        if (this.size == 0) {
-            this.head == node;
-        } else {
-            currentNode = this.head;
-            let counter = 0;
-            do {
-                if (counter == position && position != this.size) {
-                    currentNode = currentNode.nextNode;
-                    node.nextNode = currentNode.nextNode;
-                    node.previousNode = currentNode;
-                    node.nextNode.previousNode = node;
-                    currentNode.nextNode = node;
-                    break;
-                } else if (counter == position && position == this.size) {
-                    currentNode = currentNode.nextNode;
-                    currentNode.nextNode = node;
-                    node.previousNode = currentNode;
-                    node.nextNode = this.head;
-                    break;
-                } else {
-                    currentNode = currentNode.nextNode;
-                }
-                counter++;
-            }while (currentNode.nextNode != this.head)
         }
         this.size++;
+        return this.head;
+    }
+
+    //adding a new node to the front of the list (this method is private)
+    //params --> node (Node)
+    addNodeHead(node){
+        node.nextNode = this.head.nextNode;
+        this.head.nextNode = node;
+        let data = node.data;
+        node.data = this.head.data;
+        this.head.data = data;
+    }
+
+    //adding a new node to the tail of the list (this method is private)
+    //params --> node (Node)
+    addNodeTail(node){
+        node.nextNode = this.head.nextNode;
+        this.head.nextNode = node;
+        let data = node.data;
+        node.data = this.head.data;
+        this.head.data = data;
+        this.head = node;
+    }
+
+    //adding a new node to a particular position (this method is private)
+    //params --> node (Node), position (number)
+    addNodePosition(node,position){
+        let currentNode = this.head;
+        let counter = 1;
+        while(counter <= position-2){
+            currentNode = currentNode.nextNode;
+            counter++;
+        }
+
+        node.nextNode = currentNode.nextNode;
+        currentNode.nextNode = node; 
+
     }
 
     //deleting a node at a particular position
     //params --> position (number)
-    deleteNode(position = this.size) {
-        if (this.size != 0) {
-            position = typeof (position) == "number" && positon <= this.size ? position : this.size;
-
-            let currentNode = this.head;
-            let selectedNode;
-            let counter = 0;
-            do {
-                if (counter == position - 1 && position != this.size) {
-                    selectedNode = currentNode.nextNode;
-                    currentNode.nextNode = selectedNode.nextNode;
-                    selectedNode.nextNode.previousNode = currentNode;
-                    selectedNode.previousNode = null;
-                    selectedNode.nextNode = null;
-                } else if (counter == position - 1 && position == this.size) {
-                    currentNode.nextNode = this.head;
-                    selectedNode.nextNode = null;
-                    selectedNode.previousNode = null;
-                    break;
-                } else {
-                    currentNode = currentNode.nextNode;
-                }
-                counter++;
-            } while (currentNode.nextNode != this.head) 
-            return selectedNode;
-        } else {
-             //unable to delete the linkedList is empty
-            return -1;
+    //returns --> deletedData(any)
+    deleteNode(position=this.sizeOf()) {
+        let deletedData;
+        if(this.sizeOf() == 0){
+            console.log("List is empty, unable to delete data");
+            return null;
+        }else{
+            if(typeof(position) != "number" && (position > this.sizeOf() || position < 1)){
+                position = this.sizeOf();
+                console.log("received invalid position. Deleting tail");
+            }   
+            
+            if(position == 1){
+                deletedData = this.deleteNodeHead();
+            }else{
+                deletedData = this.deleteNodePosition(position);
+            }
         }
+        this.size--;
+        return deletedData;
+    }
+
+    //deleting a node at the head of the list (this method is private)
+    //params --> none
+    //returns --> deletedData(any)
+    deleteNodeHead(){
+        let currentNode = this.head.nextNode;
+        this.head.data = currentNode.data;
+        this.head.nextNode = currentNode.nextNode;
+        currentNode.nextNode = null;
+        return currentNode.data;
+    }
+
+    //deleting a node at a particular position (this method is private)
+    //params --> position(number)
+    //returns --> deletedData(any)
+    deleteNodePosition(position){
+        let currentNode = this.head;
+        let counter = 1;
+        while(counter <= position-2){
+            currentNode = currentNode.nextNode;
+            counter++;
+        }
+
+        let deletedNode = currentNode.nextNode;
+        currentNode.nextNode = deletedNode.nextNode;
+        deletedNode.nextNode = null;
+        return deletedNode.data;
     }
 
     //returns the size of the linked list
@@ -100,23 +146,52 @@ class DoublyLinkedList {
     //returns --> index(number)
     indexOf(data) {
         let currentNode = this.head;
-        let counter = 0;
-        while (currentNode.nextNode) {
-            if (currentNode.data == data) {
+        let counter = 1;
+        
+        if(this.isEmpty()){
+            return -1;
+        }
+
+        while (currentNode.nextNode != this.head) {
+            let nodeData = currentNode.data instanceof("object")? JSON.stringify(currentNode.data) : currentNode.data;  
+            data = currentNode.data instanceof("object")? JSON.stringify(currentNode.data) : currentNode.data; 
+            if (nodeData == data) {
                 return counter;
             } else {
-                currentNode = currentNode.nextNode
+                currentNode = currentNode.nextNode;
                 counter++;
             }
         }
+        
         //not found
         return -1;
+
     }
 
     //searching for a particular node
-    //TODO --> this will be written post searching
-    searchNode(position = this.size) {
+    //params --> position(number)
+    //returns --> data(any)
+    valueOf(position=this.sizeOf()) {
+        let currentNode = this.head;
+        let counter = 1;
 
+        if(this.isEmpty()){
+            return null;
+        }
+
+        while(counter < this.sizeOf()){
+            if(position == counter){
+                return currentNode.data;
+            }
+            currentNode = currentNode.nextNode;
+            counter++;
+        }
+
+        if(position == this.sizeOf()){
+            return currentNode.data;
+        }
+
+        return null;
     }
 
 }

@@ -20,25 +20,22 @@ class LinkedlistStack {
     push(data) {
         //check the stack size
         if (this.linkedListStack.sizeOf() < this.stackSize) {
-            this.linkedListStack.addNode(data);
-            return this.linkedListStack;
+            this.linkedListStack.addNode(data,1);
         } else {
-            //stack overflow pop some data before pushing in
-            return -1;
+            console.log("Stack overflow, pop data out before inserting more");
         }
     }
 
     //Poping a node from the top of the stack
     //params --> none
-    //returns --> data(any)
-    pop(data) {
+    pop() {
         //check the stack size
-        if (this.linkedListStack.sizeOf() == 0) {
-            let data = this.linkedListStack.deleteNode();
+        if (this.linkedListStack.sizeOf() != 0) {
+            let data = this.linkedListStack.deleteNode(1);
             return data;
         } else {
-            //stack underflow push some data before poping out
-            return -1;
+            console.log("Stack underflow, push some data in before popping out");
+            return null;
         }
     }
 
@@ -46,16 +43,11 @@ class LinkedlistStack {
     //params --> none
     //returns --> data (any)
     peek() {
-        if (this.linkedListStack.sizeOf() == 0) {
-
-            let data = this.linkedListStack.head;
-            while (data.nextNode) {
-                data = data.nextNode;
-            }
-            return data;
+        if (this.linkedListStack.sizeOf() != 0) {
+            return this.linkedListStack.head.data;
         } else {
-            //there is no data in the stack
-            return -1;
+            console.log("Stack underflow, push some data in before peeking");
+            return null;
         }
     }
 

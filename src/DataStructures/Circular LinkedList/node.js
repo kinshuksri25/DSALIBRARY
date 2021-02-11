@@ -1,5 +1,5 @@
 /*
-node class for single Doubly LinkedList class
+node class for Circular LinkedList class
 */
 
 //declaring the class
@@ -8,7 +8,6 @@ class Node {
     constructor(data) {
         this.data = data;
         this.nextNode = null;
-        this.previousNode = null;
     }
 
 }

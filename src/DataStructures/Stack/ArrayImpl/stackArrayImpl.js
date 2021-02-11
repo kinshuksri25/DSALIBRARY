@@ -15,30 +15,27 @@ class ArrayStack {
 
     //Pushing a new node to the top of the stack
     //params --> data (any)
-    //returns --> stack
     push(data){
 
         //check the stack size
         if (this.arrStack.length < this.stackSize) {
             this.arrStack.push(data);
-            return this.arrStack;
         } else {
-            //stack overflow pop some data before pushing in
-            return -1;
+            console.log("Stack overflow, pop data out before inserting more");
         }
     }
 
-    //Poping a node from the top of the stack
+    //Popping a node from the top of the stack
     //params --> none
     //returns --> data(any)
-    pop(data){
+    pop(){
         //check the stack size
-        if (this.arrStack.length == 0) {
+        if (this.arrStack.length != 0) {
             let data = this.arrStack.pop();
             return data;
         } else {
-            //stack underflow push some data before poping out
-            return -1;
+            console.log("Stack underflow, push some data in before popping out");
+            return null;
         }
     }
 
@@ -46,12 +43,12 @@ class ArrayStack {
     //params --> none
     //returns --> data (any)
     peek(){
-        if (this.arrStack.length == 0) {
+        if (this.arrStack.length != 0) {
             let data = this.arrStack[this.arrStack.length-1];
             return data;
         } else {
-            //there is no data in the stack
-            return -1;
+            console.log("Stack underflow, push some data in before peeking");
+            return null;
         }
     }
 
