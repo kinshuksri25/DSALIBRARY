@@ -1,4 +1,4 @@
-// This non-linear DS is called when a Ninary Search Tree needs to be created
+// This non-linear DS is called when a binary Search Tree needs to be created
 
 //For a binary tree node the left side will point to a smaller value while the right would point to a bigger value than it 
 
